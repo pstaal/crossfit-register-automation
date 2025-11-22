@@ -1,0 +1,11 @@
+{
+  "name": "crossfit-register-automation",
+  "packageManager": "yarn@4.3.1",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "puppeteer": "^24.31.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}

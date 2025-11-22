@@ -1,0 +1,83 @@
+import puppeteer from 'puppeteer-extra'; // puppeteer-extra gebruiken
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+puppeteer.use(StealthPlugin());
+import dotenv from 'dotenv';
+dotenv.config();
+
+(async () => {
+// Launch the browser and open a new blank page.
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
+
+
+// Navigate the crossfit Culemborg
+await page.goto('https://cfc.sportbitapp.nl/web/nl/login');
+
+// Navigeer naar de loginpagina van Crossfit Culemborg
+  await page.goto('https://cfc.sportbitapp.nl/web/nl/login',{
+    waitUntil: 'networkidle2'
+  });
+
+  await page.waitForSelector('div.login__button'); // Wachten tot de knop verschijnt
+  await page.click('div.login__button');
+
+
+
+// Fill in the login form
+  await page.type('input[formcontrolname="username"]', 'peter@bind.nl');// Replace 'your_username' with your actual username
+  await page.type('input[formcontrolname="password"]', process.env.PASSWORD); // Replace 'your_password' with your actual password
+
+  await page.waitForSelector('button span'); // Wacht tot de 'span' in een 'button' zichtbaar wordt
+
+// Vind alle 'span'-elementen in 'button'-tags
+  const spans = await page.$$('button span');
+
+// Loop door de span-elementen en controleer de tekst
+  for (const span of spans) {
+    const text = await page.evaluate(el => el.textContent.trim(), span); // Haal de tekst van de span op
+    if (text === 'Inloggen') {
+      const parentButton = await page.evaluateHandle(el => el.closest('button'), span); // Vind de bovenliggende knop
+      await parentButton.click(); // Klik op de bovenliggende knop
+      break;
+    }
+  }
+
+
+
+  await page.waitForSelector('.calendar-card');
+
+// Zoek alle 'calendar-card'-divs
+  const cards = await page.$$('.calendar-card');
+
+// Loop door de divs en controleer of beide spans aanwezig zijn
+  for (const card of cards) {
+    const hasTitle = await page.evaluate(el => {
+      const titleSpan = el.querySelector('span.title');
+      return titleSpan && titleSpan.textContent.trim() === 'WOD'; // Check span titel
+    }, card);
+
+    const hasTime = await page.evaluate(el => {
+      const timeSpan = el.querySelector('span:not(.title)'); // Een span zonder class "title"
+      return timeSpan && timeSpan.textContent.trim() === '10:30 - 11:30'; // Check tijd
+    }, card);
+
+    // Als beide spans aanwezig zijn, klik op het 'card'-element
+    if (hasTitle && hasTime) {
+      await card.click();
+      break;
+    }
+  }
+
+  const buttons = await page.$$('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary');
+
+  for (const button of buttons) {
+    const buttonText = await page.evaluate(el => el.textContent.trim(), button);
+    if (buttonText === 'Aanmelden') {
+      await button.click();
+      break;
+    }
+  }
+  // Sluit de browser
+  await browser.close();
+
+})();
