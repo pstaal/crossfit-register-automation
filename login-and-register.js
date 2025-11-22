@@ -97,6 +97,7 @@ await page.goto('https://cfc.sportbitapp.nl/web/nl/login');
     }
   }
 
+  await page.waitForSelector('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary', { visible: true });
   const buttons = await page.$$('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary');
 
   for (const button of buttons) {
@@ -104,6 +105,7 @@ await page.goto('https://cfc.sportbitapp.nl/web/nl/login');
         el => el.innerText.replace(/\s+/g, ' ').trim(),
         button
     );
+
 
     if (text.includes('Aanmelden')) {
       await button.click();
