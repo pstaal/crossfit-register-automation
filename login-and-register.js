@@ -42,6 +42,35 @@ await page.goto('https://cfc.sportbitapp.nl/web/nl/login');
     }
   }
 
+  const buttonSelector = 'a.calendar-dv__header__nav__right';
+  const dateSpanSelector = 'span:has(i.fa-calendar.is-hidden-touch)';
+
+  await page.waitForSelector(buttonSelector);
+  await page.waitForSelector(dateSpanSelector);
+
+  for (let i = 0; i < 7; i++) {
+
+    const previousText = await page.$eval(dateSpanSelector, el =>
+        el.innerText.replace(/\s+/g, ' ').trim()
+    );
+
+    console.log("Previous:", previousText);
+
+    await page.click(buttonSelector);
+
+    await page.waitForFunction(
+        (sel, oldText) => {
+          const el = document.querySelector(sel);
+          if (!el) return false;
+
+          const newText = el.innerText.replace(/\s+/g, ' ').trim();
+          return newText !== oldText;
+        },
+        { timeout: 15000 },  // increased timeout
+        dateSpanSelector,
+        previousText
+    );
+  }
 
 
   await page.waitForSelector('.calendar-card');
