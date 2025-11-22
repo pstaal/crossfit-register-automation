@@ -100,8 +100,12 @@ await page.goto('https://cfc.sportbitapp.nl/web/nl/login');
   const buttons = await page.$$('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary');
 
   for (const button of buttons) {
-    const buttonText = await page.evaluate(el => el.textContent.trim(), button);
-    if (buttonText === 'Aanmelden') {
+    const text = await page.evaluate(
+        el => el.innerText.replace(/\s+/g, ' ').trim(),
+        button
+    );
+
+    if (text.includes('Aanmelden')) {
       await button.click();
       break;
     }
