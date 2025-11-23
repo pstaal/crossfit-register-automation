@@ -9,9 +9,9 @@ puppeteerExtra.use(StealthPlugin());
 (async () => {
   const browser = await puppeteerExtra.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium-browser', // ✅ Use system Chromium
+    executablePath: '/usr/bin/chromium-browser', // system Chromium
     args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-    puppeteer: puppeteerCore // ✅ Explicitly tell puppeteer-extra to use puppeteer-core
+    puppeteer: puppeteerCore
   });
 
   const page = await browser.newPage();
