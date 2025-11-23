@@ -9,9 +9,16 @@ puppeteerExtra.use(StealthPlugin());
 (async () => {
   const browser = await puppeteerExtra.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium-browser', // system Chromium installed on GitHub Actions
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    puppeteer: puppeteerCore // FORCE using puppeteer-core
+    defaultViewport: null,
+    args: [
+      "--ignore-certificate-errors",
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-accelerated-2d-canvas",
+      "--disable-gpu",
+    ],
+    executablePath: "/usr/bin/google-chrome-stable",
+    puppeteer: puppeteerCore // <<< Required when using puppeteer-extra
   });
 
   const page = await browser.newPage();
