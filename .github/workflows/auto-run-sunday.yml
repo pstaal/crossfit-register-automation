@@ -20,7 +20,7 @@ jobs:
         run: npm install
 
       - name: Install Chromium
-        run: npx puppeteer browsers install chromium
+        run: npx puppeteer browsers install chromium@stable
 
       - name: Run script
         env:

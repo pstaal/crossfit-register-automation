@@ -6,14 +6,21 @@ dotenv.config();
 
 (async () => {
 // Launch the browser and open a new blank page.
+  const chromiumPath = computeExecutablePath({
+    browser: "chromium",
+    channel: "stable"
+  });
+
+  console.log("Using Chromium:", chromiumPath);
+
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: puppeteer.executablePath(),
+    executablePath: chromiumPath,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-gpu",
-      "--disable-dev-shm-usage"
+      "--disable-dev-shm-usage",
+      "--disable-gpu"
     ]
   });
 
