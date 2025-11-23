@@ -10,15 +10,17 @@ puppeteerExtra.use(StealthPlugin());
   const browser = await puppeteerExtra.launch({
     headless: true,
     defaultViewport: null,
+    executablePath: "/usr/bin/google-chrome-stable",
     args: [
       "--ignore-certificate-errors",
       "--no-sandbox",
       "--disable-setuid-sandbox",
+      "--disable-gpu-sandbox",
+      "--disable-dev-shm-usage",
       "--disable-accelerated-2d-canvas",
       "--disable-gpu",
     ],
-    executablePath: "/usr/bin/google-chrome-stable",
-    puppeteer: puppeteerCore // <<< Required when using puppeteer-extra
+    puppeteer: puppeteerCore
   });
 
   const page = await browser.newPage();
