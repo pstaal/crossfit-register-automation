@@ -23,7 +23,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@puppeteer/browsers@npm:2.10.13, @puppeteer/browsers@npm:^2.10.13":
+"@puppeteer/browsers@npm:2.10.13":
   version: 2.10.13
   resolution: "@puppeteer/browsers@npm:2.10.13"
   dependencies:
@@ -329,7 +329,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "crossfit-register-automation@workspace:."
   dependencies:
-    "@puppeteer/browsers": "npm:^2.10.13"
     dotenv: "npm:^17.2.3"
     puppeteer: "npm:^24.31.0"
     puppeteer-core: "npm:^24.31.0"

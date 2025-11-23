@@ -3,7 +3,6 @@
   "packageManager": "yarn@4.3.1",
   "type": "module",
   "dependencies": {
-    "@puppeteer/browsers": "^2.10.13",
     "dotenv": "^17.2.3",
     "puppeteer": "^24.31.0",
     "puppeteer-core": "^24.31.0",

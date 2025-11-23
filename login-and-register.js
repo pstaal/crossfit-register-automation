@@ -1,21 +1,17 @@
 import puppeteerExtra from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import puppeteerCore from 'puppeteer-core';
-import { computeExecutablePath } from '@puppeteer/browsers';
 import dotenv from 'dotenv';
 
 dotenv.config();
 puppeteerExtra.use(StealthPlugin());
 
 (async () => {
-  const chromiumPath = computeExecutablePath({ browser: 'chromium', channel: 'stable' });
-  console.log("Using Chromium at:", chromiumPath);
-
   const browser = await puppeteerExtra.launch({
     headless: true,
-    executablePath: '/usr/bin/chromium-browser', // System Chromium
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    puppeteer: puppeteerCore
+    executablePath: '/usr/bin/chromium-browser', // ✅ Use system Chromium
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    puppeteer: puppeteerCore // ✅ Explicitly tell puppeteer-extra to use puppeteer-core
   });
 
   const page = await browser.newPage();
