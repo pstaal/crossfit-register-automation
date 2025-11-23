@@ -2,6 +2,9 @@
   "name": "crossfit-register-automation",
   "packageManager": "yarn@4.3.1",
   "type": "module",
+  "resolutions": {
+    "@puppeteer/browsers": "0.0.0"
+  },
   "dependencies": {
     "dotenv": "^17.2.3",
     "puppeteer": "^24.31.0",
