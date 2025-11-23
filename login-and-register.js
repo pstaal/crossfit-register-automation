@@ -6,7 +6,14 @@ dotenv.config();
 
 (async () => {
 // Launch the browser and open a new blank page.
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox"
+    ]
+  });
+
   const page = await browser.newPage();
 
 
@@ -48,7 +55,7 @@ await page.goto('https://cfc.sportbitapp.nl/web/nl/login');
   await page.waitForSelector(buttonSelector);
   await page.waitForSelector(dateSpanSelector);
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 6; i++) {
 
     const previousText = await page.$eval(dateSpanSelector, el =>
         el.innerText.replace(/\s+/g, ' ').trim()
