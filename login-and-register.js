@@ -7,9 +7,14 @@ dotenv.config();
 (async () => {
 // Launch the browser and open a new blank page.
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: puppeteer.executablePath()  // <-- IMPORTANT for new Puppeteer!
+    headless: true,
+    executablePath: puppeteer.executablePath("chromium"),
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-gpu",
+      "--disable-dev-shm-usage"
+    ]
   });
 
   const page = await browser.newPage();
