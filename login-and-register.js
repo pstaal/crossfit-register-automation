@@ -6,22 +6,22 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 (async () => {
-// Launch the browser and open a new blank page.
+  // Force Puppeteer Extra to use Chromium installed via @puppeteer/browsers
   const chromiumPath = computeExecutablePath({
-    browser: "chromium",
-    channel: "stable"
+    browser: 'chromium',
+    channel: 'stable'
   });
 
   console.log("Using Chromium at:", chromiumPath);
 
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: chromiumPath,
+    executablePath: chromiumPath, // ✅ Must point to Chromium
     args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu"
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu'
     ]
   });
 
