@@ -29,4 +29,5 @@ jobs:
       - name: Run script
         env:
           PASSWORD: ${{ secrets.PASSWORD }}
+          PUPPETEER_DISABLE_SANDBOX_FOR_TESTING: true
         run: node login-and-register.js

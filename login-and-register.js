@@ -2,6 +2,7 @@ import puppeteerExtra from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import puppeteerCore from 'puppeteer-core';
 import dotenv from 'dotenv';
+process.env.PUPPETEER_DISABLE_SANDBOX_FOR_TESTING = "true";
 
 dotenv.config();
 puppeteerExtra.use(StealthPlugin());
@@ -12,12 +13,10 @@ puppeteerExtra.use(StealthPlugin());
     defaultViewport: null,
     executablePath: "/usr/bin/google-chrome-stable",
     args: [
-      "--ignore-certificate-errors",
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-gpu-sandbox",
       "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
       "--disable-gpu",
     ],
     puppeteer: puppeteerCore
