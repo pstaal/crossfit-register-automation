@@ -8,7 +8,7 @@ dotenv.config();
 // Launch the browser and open a new blank page.
   const browser = await puppeteer.launch({
     headless: true,
-    executablePath: puppeteer.executablePath("chromium"),
+    executablePath: puppeteer.executablePath(),
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
