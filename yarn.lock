@@ -332,6 +332,7 @@ __metadata:
     "@puppeteer/browsers": "npm:^2.10.13"
     dotenv: "npm:^17.2.3"
     puppeteer: "npm:^24.31.0"
+    puppeteer-core: "npm:^24.31.0"
     puppeteer-extra: "npm:^3.3.6"
     puppeteer-extra-plugin-stealth: "npm:^2.11.2"
   languageName: unknown
@@ -950,7 +951,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer-core@npm:24.31.0":
+"puppeteer-core@npm:24.31.0, puppeteer-core@npm:^24.31.0":
   version: 24.31.0
   resolution: "puppeteer-core@npm:24.31.0"
   dependencies:
