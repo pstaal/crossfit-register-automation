@@ -2,30 +2,26 @@ name: Run Script on Sunday at 00:02 AM (GMT+1)
 
 on:
   schedule:
-    # Cron-schema: Elke zaterdag 23:02 UTC (wat overeenkomt met 00:02 GMT+1 op zondag)
     - cron: "2 23 * * 6"
-  workflow_dispatch: # Optioneel: handmatig starten via de GitHub interface
-    inputs: {}
+  workflow_dispatch:
 
 jobs:
   run-script:
-    runs-on: ubuntu-latest # Gebruik een Linux-machine van GitHub
+    runs-on: ubuntu-latest
+
     steps:
-      # Check de repository code uit
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # Stel Node.js in
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "16" # Node.js versie
+          node-version: "20"
 
-      # Installeer npm dependencies
       - name: Install dependencies
         run: npm install
 
-      # Voer het script uit
+      - name: Install Chromium
+        run: npx puppeteer browsers install chrome
+
       - name: Run script
         env:
           PASSWORD: ${{ secrets.PASSWORD }}
