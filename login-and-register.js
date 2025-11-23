@@ -13,14 +13,9 @@ puppeteerExtra.use(StealthPlugin());
 
   const browser = await puppeteerExtra.launch({
     headless: true,
-    executablePath: chromiumPath,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-dev-shm-usage',
-      '--disable-gpu'
-    ],
-    puppeteer: puppeteerCore // ✅ This is critical
+    executablePath: '/usr/bin/chromium-browser', // System Chromium
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    puppeteer: puppeteerCore
   });
 
   const page = await browser.newPage();

@@ -19,8 +19,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Chromium
-        run: npx puppeteer browsers install chromium@stable
+      - name: Install system Chromium
+        run: sudo apt-get update && sudo apt-get install -y chromium-browser
 
       - name: Run script
         env:
