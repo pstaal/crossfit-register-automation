@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer-extra'; // puppeteer-extra gebruiken
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import { computeExecutablePath } from '@puppeteer/browsers';
 puppeteer.use(StealthPlugin());
 import dotenv from 'dotenv';
 dotenv.config();
@@ -11,7 +12,7 @@ dotenv.config();
     channel: "stable"
   });
 
-  console.log("Using Chromium:", chromiumPath);
+  console.log("Using Chromium at:", chromiumPath);
 
   const browser = await puppeteer.launch({
     headless: true,
