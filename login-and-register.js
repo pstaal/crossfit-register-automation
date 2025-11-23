@@ -1,5 +1,6 @@
 import puppeteerExtra from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import puppeteerCore from 'puppeteer-core';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -8,27 +9,32 @@ puppeteerExtra.use(StealthPlugin());
 (async () => {
   const browser = await puppeteerExtra.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    defaultViewport: null,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--ignore-certificate-errors'
+    ],
+    puppeteer: puppeteerCore
   });
 
   const page = await browser.newPage();
 
-  // Go to login page
-  await page.goto('https://cfc.sportbitapp.nl/web/nl/login', {
-    waitUntil: 'networkidle2',
-  });
+  // Navigate to Crossfit Culemborg login
+  await page.goto('https://cfc.sportbitapp.nl/web/nl/login', { waitUntil: 'networkidle2' });
 
   await page.waitForSelector('div.login__button');
   await page.click('div.login__button');
 
-  // Fill login form
+  // Fill in login form
   await page.type('input[formcontrolname="username"]', 'peter@bind.nl');
   await page.type('input[formcontrolname="password"]', process.env.PASSWORD);
 
+  // Click the "Inloggen" button
   await page.waitForSelector('button span');
-
   const spans = await page.$$('button span');
-
   for (const span of spans) {
     const text = await page.evaluate(el => el.textContent.trim(), span);
     if (text === 'Inloggen') {
@@ -48,8 +54,8 @@ puppeteerExtra.use(StealthPlugin());
     const previousText = await page.$eval(dateSpanSelector, el =>
       el.innerText.replace(/\s+/g, ' ').trim()
     );
+    console.log('Previous:', previousText);
 
-    console.log("Previous:", previousText);
     await page.click(buttonSelector);
 
     await page.waitForFunction(
@@ -66,7 +72,6 @@ puppeteerExtra.use(StealthPlugin());
   }
 
   await page.waitForSelector('.calendar-card');
-
   const cards = await page.$$('.calendar-card');
 
   for (const card of cards) {
@@ -86,11 +91,7 @@ puppeteerExtra.use(StealthPlugin());
     }
   }
 
-  await page.waitForSelector(
-    'button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary',
-    { visible: true }
-  );
-
+  await page.waitForSelector('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary', { visible: true });
   const buttons = await page.$$('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary');
 
   for (const button of buttons) {

@@ -1,6 +1,5 @@
 name: Run Crossfit Registration Script
 
-# Trigger manually or on schedule
 on:
   workflow_dispatch:
   schedule:
@@ -11,26 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repo
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      # Step 2: Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: 20
 
-      # Step 3: Install dependencies (skip Puppeteer's Chromium)
       - name: Install dependencies
         run: npm install
         env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true  # skip Puppeteer’s Chromium
 
-      # Step 4: Run your Puppeteer script using puppeteer-headful
+      # Launch Chrome (headful) in the background
+      - uses: browser-actions/puppeteer-headful@v1
+
+      # Run your Node script with the environment variable
       - name: Run Puppeteer script
-        uses: browser-actions/puppeteer-headful@v1
-        with:
-          run: node login-and-register.js
+        run: node login-and-register.js
         env:
           PASSWORD: ${{ secrets.PASSWORD }}
