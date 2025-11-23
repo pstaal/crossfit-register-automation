@@ -3,13 +3,13 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import puppeteerCore from 'puppeteer-core';
 import { computeExecutablePath } from '@puppeteer/browsers';
 import dotenv from 'dotenv';
-dotenv.config();
 
+dotenv.config();
 puppeteerExtra.use(StealthPlugin());
 
 (async () => {
-  // Force Puppeteer Extra to use Chromium installed via @puppeteer/browsers
   const chromiumPath = computeExecutablePath({ browser: 'chromium', channel: 'stable' });
+  console.log("Using Chromium at:", chromiumPath);
 
   const browser = await puppeteerExtra.launch({
     headless: true,
@@ -20,8 +20,7 @@ puppeteerExtra.use(StealthPlugin());
       '--disable-dev-shm-usage',
       '--disable-gpu'
     ],
-    // Tell puppeteer-extra to use puppeteer-core
-    puppeteer: puppeteerCore
+    puppeteer: puppeteerCore // ✅ This is critical
   });
 
   const page = await browser.newPage();
