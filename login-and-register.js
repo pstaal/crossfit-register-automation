@@ -2,6 +2,7 @@ import puppeteerExtra from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import puppeteerCore from 'puppeteer-core';
 import dotenv from 'dotenv';
+process.env.PUPPETEER_SKIP_CHROMIUM_DOWNLOAD = "true";
 process.env.PUPPETEER_DISABLE_SANDBOX_FOR_TESTING = "true";
 
 dotenv.config();
@@ -10,15 +11,15 @@ puppeteerExtra.use(StealthPlugin());
 (async () => {
   const browser = await puppeteerExtra.launch({
     headless: true,
-    defaultViewport: null,
-    executablePath: "/usr/bin/google-chrome-stable",
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-gpu-sandbox",
       "--disable-dev-shm-usage",
       "--disable-gpu",
+      "--disable-gpu-sandbox",
+      "--no-zygote",
     ],
+    executablePath: "/usr/bin/google-chrome-stable",
     puppeteer: puppeteerCore
   });
 
