@@ -1,32 +1,36 @@
-name: Run Script on Sunday at 00:02 AM (GMT+1)
+name: Run Crossfit Registration Script
 
+# Trigger manually or on schedule
 on:
-  schedule:
-    - cron: "2 23 * * 6"   # Runs every Sunday at 00:02 AM GMT+1
   workflow_dispatch:
+  schedule:
+    - cron: "2 23 * * 6" # Every Saturday 23:02 UTC (Sunday 00:02 GMT+1)
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      # Step 1: Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: 20
 
+      # Step 3: Install dependencies (skip Puppeteer's Chromium)
       - name: Install dependencies
         run: npm install
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: true
 
-      - name: Setup Puppeteer Headful
+      # Step 4: Run your Puppeteer script using puppeteer-headful
+      - name: Run Puppeteer script
         uses: browser-actions/puppeteer-headful@v1
         with:
-          chrome-version: stable  # installs stable Google Chrome
-          headless: false         # you can use true if you want headless
-          args: "--no-sandbox,--disable-setuid-sandbox"
-
-      - name: Run script
+          run: node login-and-register.js
         env:
           PASSWORD: ${{ secrets.PASSWORD }}
-        run: node login-and-register.js

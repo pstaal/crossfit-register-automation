@@ -7,13 +7,8 @@ puppeteerExtra.use(StealthPlugin());
 
 (async () => {
   const browser = await puppeteerExtra.launch({
-    headless: false, // can be true if you don’t need to see browser
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-    ],
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const page = await browser.newPage();
