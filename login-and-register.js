@@ -1,6 +1,5 @@
 import puppeteerExtra from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import puppeteerCore from 'puppeteer-core';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -9,37 +8,34 @@ puppeteerExtra.use(StealthPlugin());
 (async () => {
   const browser = await puppeteerExtra.launch({
     headless: true,
-    defaultViewport: null,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
-      '--disable-accelerated-2d-canvas',
+      '--disable-dev-shm-usage',
       '--disable-gpu',
-      '--ignore-certificate-errors'
     ],
-    puppeteer: puppeteerCore
+    executablePath: '/usr/bin/google-chrome-stable'
   });
 
   const page = await browser.newPage();
 
-  // Navigate to Crossfit Culemborg login
+  // Go to login
   await page.goto('https://cfc.sportbitapp.nl/web/nl/login', { waitUntil: 'networkidle2' });
-
   await page.waitForSelector('div.login__button');
   await page.click('div.login__button');
 
-  // Fill in login form
+  // Fill in credentials
   await page.type('input[formcontrolname="username"]', 'peter@bind.nl');
   await page.type('input[formcontrolname="password"]', process.env.PASSWORD);
 
-  // Click the "Inloggen" button
+  // Find and click "Inloggen" button
   await page.waitForSelector('button span');
   const spans = await page.$$('button span');
   for (const span of spans) {
     const text = await page.evaluate(el => el.textContent.trim(), span);
     if (text === 'Inloggen') {
-      const parentButton = await page.evaluateHandle(el => el.closest('button'), span);
-      await parentButton.click();
+      const btn = await page.evaluateHandle(el => el.closest('button'), span);
+      await btn.click();
       break;
     }
   }
@@ -51,38 +47,36 @@ puppeteerExtra.use(StealthPlugin());
   await page.waitForSelector(dateSpanSelector);
 
   for (let i = 0; i < 6; i++) {
-    const previousText = await page.$eval(dateSpanSelector, el =>
+    const prev = await page.$eval(dateSpanSelector, el =>
       el.innerText.replace(/\s+/g, ' ').trim()
     );
-    console.log('Previous:', previousText);
+    console.log('Previous:', prev);
 
     await page.click(buttonSelector);
 
     await page.waitForFunction(
-      (sel, oldText) => {
+      (sel, old) => {
         const el = document.querySelector(sel);
         if (!el) return false;
-        const newText = el.innerText.replace(/\s+/g, ' ').trim();
-        return newText !== oldText;
+        return el.innerText.replace(/\s+/g, ' ').trim() !== old;
       },
       { timeout: 15000 },
       dateSpanSelector,
-      previousText
+      prev
     );
   }
 
   await page.waitForSelector('.calendar-card');
   const cards = await page.$$('.calendar-card');
-
   for (const card of cards) {
     const hasTitle = await page.evaluate(el => {
-      const titleSpan = el.querySelector('span.title');
-      return titleSpan && titleSpan.textContent.trim() === 'WOD';
+      const s = el.querySelector('span.title');
+      return s && s.textContent.trim() === 'WOD';
     }, card);
 
     const hasTime = await page.evaluate(el => {
-      const timeSpan = el.querySelector('span:not(.title)');
-      return timeSpan && timeSpan.textContent.trim() === '10:30 - 11:30';
+      const s = el.querySelector('span:not(.title)');
+      return s && s.textContent.trim() === '10:30 - 11:30';
     }, card);
 
     if (hasTitle && hasTime) {
@@ -93,11 +87,10 @@ puppeteerExtra.use(StealthPlugin());
 
   await page.waitForSelector('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary', { visible: true });
   const buttons = await page.$$('button.mat-mdc-button-base.mat-mdc-unelevated-button.mat-primary');
-
-  for (const button of buttons) {
-    const text = await page.evaluate(el => el.innerText.replace(/\s+/g, ' ').trim(), button);
-    if (text.includes('Aanmelden')) {
-      await button.click();
+  for (const b of buttons) {
+    const t = await page.evaluate(el => el.innerText.replace(/\s+/g, ' ').trim(), b);
+    if (t.includes('Aanmelden')) {
+      await b.click();
       break;
     }
   }
